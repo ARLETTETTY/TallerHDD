@@ -9,7 +9,5 @@ import java.time.Clock;
 public class ClockConfig {
 
     @Bean
-    public Clock clock() {
-        return Clock.systemDefaultZone();
-    }
+    public Clock clock() { return Clock.systemDefaultZone(); }
 }
