@@ -12,7 +12,6 @@ import cl.usm.tallerhdd.controller.dto.ActualizarEstadoRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pesajes")
@@ -27,29 +26,17 @@ public class PesajeController {
 
     @PostMapping
     public ResponseEntity<?> registrar(@RequestBody RegistrarPesajeRequest request) {
-        try {
-            RegistroPesaje registro = pesajeService.registrarPesaje(
-                    request.getIdBalanza(), request.getIdPaquete(), request.getPesoKg());
-            return ResponseEntity.status(HttpStatus.CREATED).body(registro);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body(Map.of("error", ex.getMessage()));
-        }
+        RegistroPesaje registro = pesajeService.registrarPesaje(
+                request.getIdBalanza(), request.getIdPaquete(), request.getPesoKg());
+        return ResponseEntity.status(HttpStatus.CREATED).body(registro);
     }
 
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstado(@PathVariable String id,
                                               @RequestBody ActualizarEstadoRequest request) {
-        try {
-            EstadoPesaje nuevoEstado = EstadoPesaje.valueOf(request.getEstado());
-            RegistroPesaje actualizado = pesajeService.actualizarEstado(id, nuevoEstado);
-            return ResponseEntity.ok(actualizado);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Estado inválido: " + request.getEstado()));
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body(Map.of("error", ex.getMessage()));
-        }
+        EstadoPesaje nuevoEstado = EstadoPesaje.valueOf(request.getEstado());
+        RegistroPesaje actualizado = pesajeService.actualizarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(actualizado);
     }
 
     @GetMapping
