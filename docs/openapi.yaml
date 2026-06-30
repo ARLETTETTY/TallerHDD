@@ -1,0 +1,129 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/pesajes/{id}/estado:
+    put:
+      tags:
+      - pesaje-controller
+      operationId: actualizarEstado
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActualizarEstadoRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/pesajes:
+    get:
+      tags:
+      - pesaje-controller
+      operationId: obtenerPorFecha
+      parameters:
+      - name: desde
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: hasta
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RegistroPesaje"
+    post:
+      tags:
+      - pesaje-controller
+      operationId: registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrarPesajeRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    ActualizarEstadoRequest:
+      type: object
+      properties:
+        estado:
+          type: string
+    RegistrarPesajeRequest:
+      type: object
+      properties:
+        idBalanza:
+          type: string
+        idPaquete:
+          type: string
+        pesoKg:
+          type: number
+          format: double
+    RegistroPesaje:
+      type: object
+      properties:
+        id:
+          type: string
+        idBalanza:
+          type: string
+        idPaquete:
+          type: string
+        pesoSansas:
+          type: number
+          format: double
+        categoria:
+          type: string
+          enum:
+          - LIVIANO
+          - MEDIANO
+          - PESADO
+        estado:
+          type: string
+          enum:
+          - INGRESADO
+          - PESADO
+          - APROBADO
+          - RECHAZADO
+          - DESPACHADO
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        historialEstados:
+          type: array
+          items:
+            type: string
